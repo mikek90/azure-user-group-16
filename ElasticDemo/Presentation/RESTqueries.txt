@@ -1,0 +1,201 @@
+GET _search
+{
+  "query": {
+    "match_all": {}
+  }
+}
+
+GET _cat/indices?v
+
+PUT /bookstore/books/1
+{
+  "ean": "590001",
+	"title": "Shortest book",
+	"abstract": "Hello world! How are you?",
+	"printed": 321,
+	"publish_date": "2016-01-01"
+}
+
+PUT /bookstore/books/2
+{
+  "ean": "590002",
+	"title": "Shorter book",
+	"abstract": "Hello wonderful world full of flowers, sun and hot water! How are you doing? It is really hot in here!",
+	"printed": 1032,
+	"publish_date": "2016-05-06"
+}
+
+GET bookstore/_mapping
+
+DELETE /bookstore
+
+PUT /bookstore
+{
+  //"settings": {
+  //  "index": {
+  //    "number_of_shards": 3,
+  //    "number_of_replicas": 2
+  //  }
+  //},
+  "mappings": {
+    "books": {
+      "properties": {
+        "ean": {
+          "type": "text"
+        },
+        "title": {
+          "type": "text"
+        },
+        "abstract": {
+          "type": "text",
+          "fielddata": "true"//,
+          //"analyzer": "whitespace"
+        },
+        "printed": {
+          "type": "integer"
+        },
+        "publish_date": {
+          "type": "date",
+          "format": "YYYY-MM-DD"
+        }
+      }
+    }
+  }
+}
+
+POST /bookstore/books
+{
+  "ean": "590003",
+	"title": "First lorem",
+	"abstract": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus at bibendum eros. Etiam rutrum posuere tellus a pharetra. Praesent ultricies pretium tortor eu lobortis. Nulla commodo quam sit amet neque rutrum, vitae sollicitudin tellus posuere. Donec laoreet dui quis imperdiet aliquet. Fusce non ligula ut lorem euismod eleifend a et leo. Suspendisse convallis id tortor ut interdum. Morbi id tortor mollis lacus molestie auctor vel quis augue. Phasellus consectetur velit nec vestibulum eleifend.",
+	"printed": 11827,
+	"publish_date": "1997-07-25"
+}
+POST /bookstore/books
+{
+  "ean": "590004",
+	"title": "Second ipsum",
+	"abstract": "In felis turpis, vehicula vel sodales vel, venenatis sed erat. Ut ac lacus eu neque vehicula pretium. In nisl dui, malesuada vel bibendum ut, finibus mollis lorem. Vivamus urna diam, lacinia facilisis enim quis, placerat ullamcorper mauris. Aenean maximus volutpat leo. Cras et blandit diam, non interdum urna. Etiam faucibus lorem urna, eget vulputate arcu imperdiet at. Donec arcu ligula, posuere quis convallis a, viverra non nibh.",
+	"printed": 9574,
+	"publish_date": "1990-09-19"
+}
+POST /bookstore/books
+{
+  "ean": "590005",
+	"title": "Third lorem ipsum",
+	"abstract": "Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Pellentesque et fermentum urna, ut malesuada nisi. Ut in quam magna. Nullam dignissim, quam sit amet dignissim convallis, erat lorem volutpat lectus, rhoncus facilisis dui sem id ipsum. Curabitur aliquet metus et nunc placerat blandit. Nunc porttitor lacus lorem, quis porttitor neque interdum quis. Curabitur dignissim cursus mauris, vitae euismod ex porttitor in. Phasellus posuere vehicula nisi molestie pellentesque. Donec mattis a felis quis efficitur. Aliquam quis turpis rhoncus, mollis felis tristique, sagittis diam. Phasellus sed mauris dolor. Duis venenatis nisi velit, ut tincidunt lorem blandit vel. Aliquam euismod pretium libero a porttitor. Maecenas vel vulputate nunc. Cras sed efficitur nisi, at facilisis ipsum. Etiam porttitor imperdiet aliquet.",
+	"printed": 881235,
+	"publish_date": "1975-07-10"
+}
+
+
+// localhost/bank/accounts/_bulk?pretty
+
+GET bookstore/books/_search
+
+GET bookstore/books/_search?q=title:lorem
+
+GET bookstore/books/_search
+{
+  "query": {
+    "match": {
+      "title": "lorem ipsum"
+    }
+  }
+}
+
+GET bookstore/books/_search
+{
+  "query": {
+    "match_phrase": {
+      "title": "lorem ipsum"
+    }
+  }
+}
+
+// 1990 2020
+GET bookstore/books/_search
+{
+  "query": {
+    "bool": {
+      "must": [
+        {
+          "range": {
+            "publish_date": {
+              "gte": "1930-01-01",
+              "lte": "1990-01-01"
+            }
+          }
+        },
+        {
+          //match, term
+          "match": {
+            "abstract": "ipsum"
+          }
+        }
+      ]
+    }
+  }
+}
+
+GET bookstore/books/_search
+{
+  "query": {
+    "bool": {
+      "must": [
+        {
+          "range": {
+            "publish_date": {
+              "gte": "1930-01-01",
+              "lte": "2018-01-01"
+            }
+          }
+        },
+        {
+          "match": {
+            "abstract": "lorem ipsum"
+          }
+        }
+      ]
+    }
+  },
+  "highlight": {
+    "fields": {
+      "abstract": {}
+    }
+  }
+}
+
+GET bookstore/books/_search
+{
+  "query": {
+    "match": {
+      "abstract": "hello"
+    }
+  },
+  "aggs": {
+    "all_words": {
+      "terms": {
+        "field": "abstract"
+      }
+    }
+  }
+}
+
+// -------------------------------
+POST /bookstore/books
+{
+	"title": "Analysis test",
+	"abstract": "Convert the title-case text using the ToLower(string) command.",
+	"printed": 2,
+	"publish_date": "2017-09-08"
+}
+
+GET bookstore/books/_search
+{
+  "query": {
+    "term": {
+      "abstract": "ToLower(string)"
+    }
+  }
+}

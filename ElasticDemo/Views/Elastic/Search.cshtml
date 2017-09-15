@@ -1,0 +1,64 @@
+﻿@model List<ElasticDemo.Models.BookSearchViewModel>
+@{
+    ViewData["Title"] = "Search";
+}
+<h2>Search</h2>
+
+@using (Html.BeginForm("Search", "Elastic", FormMethod.Get))
+{
+    <div>
+        <input type="text" name="text">
+        <input type="submit" class="btn btn-default" value="Search" />
+    </div>
+}
+
+@if (Model != null)
+{
+    <table id="searchtable" class="table">
+        <thead>
+            <tr>
+                <th>Relevance</th>
+                <th>Title</th>
+                <th>Highlights</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Score)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Title)
+                    </td>
+                    <td>
+                        @Html.Raw(item.Highlights)
+                    </td>
+                    <td>
+                        @Html.ActionLink("Details", "Details", new { Ean = item.Ean }, new { @class = "btn btn-default" })
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@section css
+    {
+    <link rel="stylesheet" type="text/css" href="http://cdn.datatables.net/1.10.16/css/jquery.dataTables.css">
+}
+@section Scripts
+    {
+    <script src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('#searchtable').DataTable({
+                "order": [[0, "desc"]],
+                "searching": false,
+                "paging": false,
+            });
+        });
+    </script>
+}

@@ -1,0 +1,48 @@
+﻿@model List<BookViewModel>
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h2>Books</h2>
+<table id="bookstable" class="display">
+    <thead>
+        <tr>
+            <th>Title</th>
+            <th>Abstract</th>
+            <th>Printed</th>
+            <th>Publish date</th>
+            <th>EAN code</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var book in Model)
+            {
+            <tr>
+                <td>@book.Title</td>
+                <td>@book.Abstract</td>
+                <td>@book.Printed</td>
+                <td>@book.PublishDate</td>
+                <td>@book.Ean</td>
+
+                <td>
+                    <a href="@Url.Action("Details", "Elastic", new { Ean = book.Ean })" class="btn btn-default">Details</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@section css
+{
+    <link rel="stylesheet" type="text/css" href="http://cdn.datatables.net/1.10.16/css/jquery.dataTables.css">
+}
+@section Scripts
+{
+    <script src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('#bookstable').DataTable();
+        });
+    </script>
+}

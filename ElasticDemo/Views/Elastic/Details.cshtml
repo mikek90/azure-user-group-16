@@ -1,0 +1,45 @@
+﻿@model ElasticDemo.Models.BookViewModel
+@{
+    ViewData["Title"] = "Details";
+}
+<h2>Details</h2>
+<div>
+    <h4>BookViewModel</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Title)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Title)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Abstract)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Abstract)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Printed)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Printed)
+        </dd>
+        <dt>
+            Publish date@*@Html.DisplayNameFor(model => model.PublishDate)*@
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.PublishDate)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Ean)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Ean)
+        </dd>
+    </dl>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
